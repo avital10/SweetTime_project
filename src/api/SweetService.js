@@ -18,6 +18,6 @@ export const deleteSweet = (id) => {
 export const addSweet = (sweet) => {
     return axios.post(baseUrl, sweet);
 };
-export const editsweet = (sweet) => {
-    return axios.put(baseUrl, sweet);
+export const editsweet = (id,sweet) => {
+    return axios.put(`${baseUrl}/${id}`, sweet);
 };

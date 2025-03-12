@@ -10,6 +10,9 @@ import Cart from "./pages/Cart";
 import Navbar from "./pages/navbar";
 import { userIn } from "./features/userSlice";
 import { addToCart } from "./features/cartSlice";
+import ProtectedRoute from "./components/ProtectedRoute";
+
+
 
 function App() {
   const dispatch = useDispatch();
@@ -20,10 +23,10 @@ function App() {
       dispatch(userIn(savedUser));
     }
 
-    const savedCart = JSON.parse(localStorage.getItem("cart"));
-    if (savedCart) {
-      dispatch(addToCart(savedCart));
-    }
+    // const savedCart = JSON.parse(localStorage.getItem("cart"));
+    // if (savedCart) {
+    //   dispatch(setCart(savedCart)); //setCart-אם מחליטים שיש צורך יש לבנות
+    // }
   }, [dispatch]);
 
   return (
@@ -34,9 +37,11 @@ function App() {
           <Route path="register" element={<Register />} />
           <Route path="Cart" element={<Cart />} />
           <Route path="/" element={<SweetList />}>
+          {/* { <Route path="/Order" element={<Order/>} />} */}
             <Route path="details/:id" element={<Display />} />
           </Route>
-          <Route path="AddSweetForm" element={<AddSweetForm />} />
+          {/* <Route path="/Card" element={<Cred />}/> */}
+          <Route path="AddSweetForm" element={<ProtectedRoute><AddSweetForm /></ProtectedRoute>} />
         </Routes>
       </div>
       <Navbar />

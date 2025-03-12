@@ -1,11 +1,15 @@
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, reduce, remove } from "../features/cartSlice";
 import { Box, Card, CardContent, Typography, Button, Grid, Avatar } from "@mui/material";
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'; // ייבוא אייקון עגלת קניות
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { useNavigate } from "react-router-dom"; // ייבוא של useNavigate
 
 export default function Cart() {
-  let arrCart = useSelector((st) => st.cart.arr);
-  let dispatch = useDispatch();
+  const arrCart = useSelector((st) => st.cart.arr);
+  const dispatch = useDispatch();
+  const navigate = useNavigate(); // יצירת משתנה navigate
+  const [showCreditCard, setShowCreditCard] = useState(false);
 
   const increaseQty = (item) => {
     dispatch(addToCart(item));
@@ -18,9 +22,12 @@ export default function Cart() {
   const totalAmount = arrCart.reduce((total, item) => total + item.price * item.qty, 0);
   const totalItems = arrCart.reduce((total, item) => total + item.qty, 0);
 
+  const handleCheckout = () => {
+    navigate("/order"); // שינוי לעמוד עם שם הקובץ הנכון
+  };
+
   return (
     <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 3 }}>
-      {/* סיכום בצד שמאל */}
       {arrCart.length > 0 && (
         <Box sx={{ width: '21%', height:'300px', border: '1px solid #ddd', padding: 2, borderRadius: 2, boxShadow: 2 }}>
           <Typography variant="h6" align="center" gutterBottom>
@@ -34,23 +41,30 @@ export default function Cart() {
             <Typography variant="body1">סה"כ:</Typography>
             <Typography variant="body1" fontWeight="bold">{totalAmount} ₪</Typography>
           </Box>
+          <Button 
+            variant="contained" 
+            color="primary" 
+            fullWidth 
+            sx={{ mt: 2 }}
+            onClick={handleCheckout} // קריאה לפונקציה המעדכנת את הסטייט
+          >
+            סיום הזמנה
+          </Button>
         </Box>
       )}
 
-      {/* פריטי הסל */}
       <Box sx={{ width: '75%' }}>
         {arrCart.length === 0 ? (
-          // הצגת עגלת קניות ריקה עם כיתוב באנגלית במרכז הדף
           <Box
             sx={{
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
               width: '100%',
-              height: '100vh', // גובה הדף
+              height: '100vh',
               flexDirection: 'column',
               textAlign: 'center',
-              backgroundColor: 'rgba(169, 169, 169, 0.5)', // אפור חצי שקוף
+              backgroundColor: 'rgba(169, 169, 169, 0.5)',
               boxShadow: 2,
             }}
           >
@@ -66,7 +80,6 @@ export default function Cart() {
             {arrCart.map((item) => (
               <Grid item xs={12} sm={6} md={12} key={item._id}>
                 <Card sx={{ display: 'flex', flexDirection: 'row', boxShadow: 3, padding: 2, width: '100%' }}>
-                  {/* תמונה */}
                   <img 
                     src={item.picture} 
                     alt={item.name} 
@@ -76,7 +89,6 @@ export default function Cart() {
                     <Typography variant="h6">{item.name}</Typography>
                     {item.description && <Typography variant="body2" color="textSecondary">{item.description}</Typography>}
                     <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
-                      {/* כפתורים להוספה/הורדה */}
                       <Button 
                         variant="outlined" 
                         size="small" 
@@ -108,7 +120,6 @@ export default function Cart() {
                     >
                       🗑️ הסר
                     </Button>
-                    
                   </Box>
                 </Card>
               </Grid>

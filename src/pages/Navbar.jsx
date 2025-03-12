@@ -8,16 +8,14 @@ import { clearCart } from "../features/cartSlice";
 export default function Navbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const currentUser = useSelector((state) => state.user.currentUser); // בדיקה אם יש משתמש מחובר
+  const currentUser = useSelector((state) => state.user.currentUser);
 
   const handleLogout = () => {
     dispatch(logoutAndClearCart());
     dispatch(clearCart());
     navigate("/");
   };
-  const handleAddSweetClick = () => {
-    navigate("/AddSweetForm", { state: { sweet: null } }); // שולח מידע ריק כדי לאתחל טופס
-  };
+
   return (
     <AppBar position="fixed" color="error" sx={{ borderBottom: 2, borderColor: "white" }}>
       <Toolbar sx={{ display: "flex", justifyContent: "center", gap: 3 }}>
@@ -50,20 +48,40 @@ export default function Navbar() {
           <Button component={Link} to="/cart" variant="text" sx={{ color: "white", '&:hover': { color: 'black' } }}>
             סל קניות
           </Button>
-          <Button 
-    variant="text" 
-    sx={{ color: "white", '&:hover': { color: 'black' } }}
-    onClick={() => navigate("/AddSweetForm", { state: { resetForm: true } })} 
->
-    הוספת מוצר
-</Button>
+          {currentUser?.role === "admin" && (
+            <Button 
+              variant="text" 
+              sx={{ color: "white", '&:hover': { color: 'black' } }}
+              onClick={() => navigate("/AddSweetForm", { state: { resetForm: true } })} 
+            >
+              הוספת מוצר
+            </Button>
+          )}
         </Box>
 
-        <Box sx={{ position: "absolute", top: 8, right: 16 }}>
+        <Box sx={{ position: "absolute", top: 8, right: 16, display: "flex", alignItems: "center", gap: 1 }}>
           {currentUser ? (
-            <Button onClick={handleLogout} variant="text" sx={{ color: "white", '&:hover': { color: 'black' } }}>
-              התנתקות
-            </Button>
+            <>
+              <Box
+                sx={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: "50%",
+                  backgroundColor: "white",
+                  color: "black",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontWeight: "bold",
+                  fontSize: "18px",
+                }}
+              >
+                {currentUser.userName.charAt(0).toUpperCase()}
+              </Box>
+              <Button onClick={handleLogout} variant="text" sx={{ color: "white", '&:hover': { color: 'black' } }}>
+                התנתקות
+              </Button>
+            </>
           ) : (
             <>
               <Button component={Link} to="/register" variant="text" sx={{ color: "white", '&:hover': { color: 'black' } }}>

@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { clearCart } from './CartSlice';
+
 import { useDispatch } from "react-redux";
 
 

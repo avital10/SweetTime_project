@@ -60,12 +60,20 @@ const AddSweetForm = () => {
                     setMessage("❌ אירעה שגיאה בהוספת הממתק.");
                 }
             }
-              
-            navigate('/');
+
+            // הצגת ההודעה למשך 3 שניות ולאחר מכן ניווט
+            setTimeout(() => {
+                navigate('/');
+            }, 1000);  // 3000 מילישניות = 3 שניות
+
         } catch (error) {
             console.error(error);
             setMessage("❌ שגיאה! לא ניתן היה להוסיף את הממתק.");
         }
+    };
+
+    const handleCancel = () => {
+        navigate(-1); // חזרה לעמוד הקודם מבלי לעשות שינויים
     };
 
     return (
@@ -77,6 +85,7 @@ const AddSweetForm = () => {
             <input type="text" {...register("picture")} placeholder="כתובת תמונה" />
             <input type="text" {...register("ingredient")} placeholder="רשימת מרכיבים (מופרדים בפסיק)" required />
             <button type="submit">{isEditing ? "ערוך ממתק" : "הוסף ממתק"}</button>
+            {isEditing && <button type="button" onClick={handleCancel}>ביטול</button>}
             {message && <p>{message}</p>}
         </form>
     );
