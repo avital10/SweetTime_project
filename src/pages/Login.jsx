@@ -3,17 +3,22 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { loginServer } from "../api/userService";
 import { userIn } from "../features/userSlice";
-
+import { useState } from "react";
+import { TextField, Button, Container, Box, Typography, InputAdornment, IconButton } from "@mui/material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 export default function Login() {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, formState: { errors }, watch } = useForm();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const passwordValue = watch("password", "");
 
   const onSubmit = async (data) => {
     try {
       let res = await loginServer(data);
-      dispatch(userIn(res.data)); // שמירת המשתמש ברידקס
-      localStorage.setItem("currentUser", JSON.stringify(res.data)); // שמירת המשתמש בלוקאל סטורג'
+      dispatch(userIn(res.data));
+      localStorage.setItem("currentUser", JSON.stringify(res.data));
       alert("התחברת בהצלחה!");
       navigate("/cart");
     } catch (err) {
@@ -22,14 +27,73 @@ export default function Login() {
     }
   };
 
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
+
   return (
-    <div className="w-96 p-6 shadow-lg bg-white">
-      <h2 className="text-2xl font-bold text-center mb-4">התחברות</h2>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <input {...register("userName")} placeholder="userName" className="border p-2 w-full mb-2" />
-        <input {...register("password")} type="password" placeholder="סיסמה" className="border p-2 w-full mb-2" />
-        <button type="submit" className="bg-pink-500 text-white p-2 w-full">התחבר</button>
-      </form>
-    </div>
+    <Container maxWidth="sm" className="login-container">
+      <Box sx={{ marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <Typography component="h1" variant="h5">
+          התחברות
+        </Typography>
+        <Typography variant="body2" sx={{ mt: 1, mb: 2 }}>
+          שמחים שבאת!
+        </Typography>
+        <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 3, width: "100%" }}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            label="אימייל"
+            dir="rtl"
+            {...register("email", {
+              required: "אימייל הוא שדה חובה",
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: "כתובת אימייל לא תקינה",
+              },
+            })}
+            error={!!errors.email}
+            helperText={errors.email?.message}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            label="סיסמה"
+            type={showPassword ? "text" : "password"}
+            dir="rtl"
+            {...register("password", {
+              required: "סיסמה היא שדה חובה",
+              minLength: { value: 6, message: "הסיסמה חייבת להכיל לפחות 6 תווים" },
+            })}
+            error={!!errors.password}
+            helperText={errors.password?.message}
+            InputProps={{
+              endAdornment: passwordValue && (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+          <Button type="submit" fullWidth variant="contained" sx={{ mt: 2 }}>
+            התחבר
+          </Button>
+        </Box>
+      </Box>
+    </Container>
   );
 }

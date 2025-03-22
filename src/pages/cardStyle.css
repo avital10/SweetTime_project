@@ -2,60 +2,78 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 20px;
 }
 
 .credit-card {
-  width: 300px;
-  height: 180px;
-  perspective: 1000px; /* מאפשר את האפקט של סיבוב הכרטיס */
-  position: relative;
+  width: 350px;
+  height: 200px;
+  border-radius: 15px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
   transition: transform 0.6s;
+  transform-style: preserve-3d;
+  position: relative;
 }
 
 .credit-card.flipped {
-  transform: rotateY(180deg); /* סיבוב של 180 מעלות כשהכרטיס הפוך */
+  transform: rotateY(180deg);
 }
 
-.card-front, .card-back {
+.credit-card .front,
+.credit-card .back {
   position: absolute;
   width: 100%;
   height: 100%;
-  backface-visibility: hidden; /* חוסם את התצוגה של הצד האחורי בזמן סיבוב */
+  border-radius: 15px;
+  backface-visibility: hidden;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 15px;
-  box-sizing: border-box;
-}
-
-.card-front {
-  background-color: #2d3a3d;
   color: white;
 }
 
-.card-back {
-  background-color: #4a4a4a;
-  color: white;
-  transform: rotateY(180deg); /* הופך את הצד האחורי */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding-right: 20px;
+.credit-card .front {
+  background: linear-gradient(135deg, #2c2c2c, #1a1a1a);
 }
 
-.card-cvc {
-  font-size: 18px;
-  font-weight: bold;
+.credit-card .back {
+  background: #222;
+  transform: rotateY(180deg);
 }
 
-.card-number, .card-name, .card-bottom {
-  font-size: 16px;
+.credit-card .logo {
+  width: 60px;
+  height: auto;
+  align-self: flex-end;
 }
 
-.input-fields input {
-  margin: 10px 0;
-  padding: 10px;
+.credit-card .number,
+.credit-card .expiry,
+.credit-card .name {
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+  text-align: center;
+}
+
+.credit-card .black-bar {
   width: 100%;
+  height: 40px;
+  background: black;
+  margin-bottom: 10px;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 350px;
+}
+
+.input-container input {
+  padding: 10px;
+  font-size: 1rem;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 5px;
+  text-align: center;
 }

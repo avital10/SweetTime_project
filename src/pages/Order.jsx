@@ -1,17 +1,23 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom"; // ייבוא של useNavigate
 import { Box, TextField, Typography, Button } from "@mui/material";
+import { useSelector } from "react-redux";
 
 export default function Order() {
+  
+
+  const arrCart = useSelector((st) => st.cart.arr);
+  const currentUser = useSelector(state => state.user.currentUser);
+
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
   const navigate = useNavigate();
 
-  const totalAmount = 150; // סכום לדוגמה, אפשר להחליף בערך מהעגלה
+  const totalAmount = arrCart.reduce((total, item) => total + item.price * item.qty, 0);
 
   const handleProceedToCard = () => {
-    navigate("/credit-card"); // מעבר לעמוד כרטיס אשראי
+    navigate("/Card"); // מעבר לעמוד כרטיס אשראי
   };
 
   return (
@@ -43,15 +49,14 @@ export default function Order() {
         sx={{ mb: 2 }}
       />
       <Typography variant="h6" sx={{ mb: 2 }}>סה"כ לתשלום: {totalAmount} ₪</Typography>
-
-      <Button 
+ <Button 
         variant="contained" 
         color="primary" 
         fullWidth 
         onClick={handleProceedToCard}
       >
         המשך לתשלום
-      </Button>
+      </Button> 
     </Box>
   );
 }

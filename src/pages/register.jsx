@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { userIn } from "../features/userSlice";
 import { useNavigate } from "react-router-dom";
 import { registerServer } from "../api/userService";
+import { TextField, Button, Container, Box, Typography } from "@mui/material";
 
 export default function Register() {
   const {
@@ -16,62 +17,73 @@ export default function Register() {
   const onSubmit = async (data) => {
     try {
       let res = await registerServer(data);
-      dispatch(userIn(res.data)); // שמירת המשתמש ברידקס
+      dispatch(userIn(res.data));
       alert("נרשמת בהצלחה!");
       navigate("/");
     } catch (err) {
       console.log(err);
+      alert(err.response?.data?.message || "שגיאה בהרשמה");
     }
   };
 
   return (
-    <div className="w-96 p-6 shadow-lg bg-white">
-      <h2 className="text-2xl font-bold text-center mb-4">הרשמה</h2>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <input
-          {...register("email", {
-            required: "אימייל הוא שדה חובה",
-            pattern: {
-              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-              message: "כתובת אימייל לא תקינה",
-            },
-          })}
-          placeholder="אימייל"
-          className="border p-2 w-full mb-2"
-        />
-        {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
-
-        <input
-          {...register("password", {
-            required: "סיסמה היא שדה חובה",
-            minLength: {
-              value: 6,
-              message: "הסיסמה חייבת להכיל לפחות 6 תווים",
-            },
-          })}
-          type="password"
-          placeholder="סיסמה"
-          className="border p-2 w-full mb-2"
-        />
-        {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
-
-        <input
-          {...register("userName", {
-            required: "שם משתמש הוא שדה חובה",
-            minLength: {
-              value: 3,
-              message: "שם המשתמש חייב להכיל לפחות 3 תווים",
-            },
-          })}
-          placeholder="שם משתמש"
-          className="border p-2 w-full mb-2"
-        />
-        {errors.userName && <p className="text-red-500 text-sm">{errors.userName.message}</p>}
-
-        <button type="submit" className="bg-pink-500 text-white p-2 w-full">
-          הירשם
-        </button>
-      </form>
-    </div>
+    <Container maxWidth="sm" className="register-container">
+      <Box sx={{ marginTop: 8, display: "flex", flexDirection: "column", alignItems: "center" }}>
+        <Typography component="h1" variant="h5">
+          הרשמה
+        </Typography>
+        <Typography variant="body2" sx={{ mt: 1, mb: 2 }}>
+          שמחים שבאת! רק כמה פרטים שנכיר אותך
+        </Typography>
+        <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 3, width: "100%" }}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            label="שם משתמש"
+            dir="rtl"
+            {...register("userName", {
+              required: "שם משתמש הוא שדה חובה",
+              minLength: { value: 3, message: "שם המשתמש חייב להכיל לפחות 3 תווים" },
+            })}
+            error={!!errors.userName}
+            helperText={errors.userName?.message}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            label="אימייל"
+            dir="rtl"
+            {...register("email", {
+              required: "אימייל הוא שדה חובה",
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: "כתובת אימייל לא תקינה",
+              },
+            })}
+            error={!!errors.email}
+            helperText={errors.email?.message}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            label="סיסמה"
+            type="password"
+            dir="rtl"
+            {...register("password", {
+              required: "סיסמה היא שדה חובה",
+              minLength: { value: 6, message: "הסיסמה חייבת להכיל לפחות 6 תווים" },
+            })}
+            error={!!errors.password}
+            helperText={errors.password?.message}
+          />
+          <Button type="submit" fullWidth variant="contained" sx={{ mt: 2 }}>
+            הרשמה
+          </Button>
+        </Box>
+      </Box>
+    </Container>
   );
 }

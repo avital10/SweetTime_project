@@ -10,6 +10,7 @@ export default function Cart() {
   const dispatch = useDispatch();
   const navigate = useNavigate(); // יצירת משתנה navigate
   const [showCreditCard, setShowCreditCard] = useState(false);
+  let currentUser=useSelector(st=>st.user.currentUser);
 
   const increaseQty = (item) => {
     dispatch(addToCart(item));
@@ -23,7 +24,11 @@ export default function Cart() {
   const totalItems = arrCart.reduce((total, item) => total + item.qty, 0);
 
   const handleCheckout = () => {
-    navigate("/order"); // שינוי לעמוד עם שם הקובץ הנכון
+    if (currentUser){
+      navigate("/order"); 
+    }
+    else
+      navigate("/login")
   };
 
   return (
@@ -60,12 +65,11 @@ export default function Cart() {
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
-              width: '100%',
+              width: '100vw',
               height: '100vh',
               flexDirection: 'column',
               textAlign: 'center',
-              backgroundColor: 'rgba(169, 169, 169, 0.5)',
-              boxShadow: 2,
+              backgroundColor: 'rgb(255, 255, 255)'
             }}
           >
             <Avatar sx={{ bgcolor: 'gray', width: 100, height: 100, marginBottom: 2 }}>

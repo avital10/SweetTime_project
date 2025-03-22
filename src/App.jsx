@@ -11,6 +11,8 @@ import Navbar from "./pages/navbar";
 import { userIn } from "./features/userSlice";
 import { addToCart } from "./features/cartSlice";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Order from "./pages/order";
+import Card from "./pages/Card";
 
 
 
@@ -37,10 +39,11 @@ function App() {
           <Route path="register" element={<Register />} />
           <Route path="Cart" element={<Cart />} />
           <Route path="/" element={<SweetList />}>
-          {/* { <Route path="/Order" element={<Order/>} />} */}
             <Route path="details/:id" element={<Display />} />
           </Route>
-          {/* <Route path="/Card" element={<Cred />}/> */}
+          <Route path="/Order" element={<Order/>} />
+
+          <Route path="/Card" element={<Card />}/>
           <Route path="AddSweetForm" element={<ProtectedRoute><AddSweetForm /></ProtectedRoute>} />
         </Routes>
       </div>
